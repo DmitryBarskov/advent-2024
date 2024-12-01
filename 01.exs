@@ -12,12 +12,12 @@ defmodule Day01 do
     |> Enum.reduce({[], []}, fn [a, b], {l1, l2} -> {[a | l1], [b | l2]} end)
   end
 
-  def list_diffs([l1, l2]) do
-    Enum.zip_with(l1, l2, &diff/2)
-  end
+  def similarity_score([l1, l2]) do
+    freq = Enum.frequencies(l2)
 
-  def diff(x, y) do
-    abs(x - y)
+    l1
+    |> Enum.map(fn x -> Map.get(freq, x, 0) * x end)
+    |> Enum.sum
   end
 
   def main() do
@@ -25,9 +25,7 @@ defmodule Day01 do
     |> split_into_lists()
     |> Tuple.to_list()
     |> Enum.map(&Enum.map(&1, fn str -> Integer.parse(str) |> elem(0) end))
-    |> Enum.map(&Enum.sort/1)
-    |> list_diffs
-    |> Enum.sum
+    |> similarity_score
     |> IO.inspect()
   end
 end
