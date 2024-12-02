@@ -1,10 +1,5 @@
 defmodule Day01 do
-  def read_lines() do
-    case IO.gets(nil) do
-      :eof -> []
-      line -> [String.trim(line) | read_lines()]
-    end
-  end
+  import Lib, only: [read_lines: 0]
 
   def split_into_lists(input_lines) do
     input_lines
@@ -29,5 +24,3 @@ defmodule Day01 do
     |> IO.inspect()
   end
 end
-
-Day01.main()
