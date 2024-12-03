@@ -6,3 +6,6 @@ Elixir.Lib.beam:
 
 %: Elixir.Lib.beam
 	docker run --rm -v "$$PWD:$$PWD" elixir:alpine sh -c "cd $$PWD && rm -f Elixir.Day$@.beam && elixirc day$@.ex && elixir -e 'Day$@.main()' < inputs/$@.txt"
+
+iex:
+	docker run --rm -it -v "$$PWD:$$PWD" elixir:alpine iex
