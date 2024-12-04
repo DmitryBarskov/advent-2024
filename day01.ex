@@ -1,6 +1,4 @@
 defmodule Day01 do
-  import Lib, only: [read_lines: 0]
-
   def split_into_lists(input_lines) do
     input_lines
     |> Enum.map(&String.split(&1, " ", trim: true))
@@ -16,7 +14,7 @@ defmodule Day01 do
   end
 
   def main() do
-    read_lines()
+    Lib.read_lines()
     |> split_into_lists()
     |> Tuple.to_list()
     |> Enum.map(&Enum.map(&1, fn str -> Integer.parse(str) |> elem(0) end))

@@ -1,6 +1,4 @@
 defmodule Day02 do
-  import Lib, only: [read_lines: 0]
-
   def parse_report(line),
     do:
       line
@@ -35,7 +33,7 @@ defmodule Day02 do
   end
 
   def main() do
-    read_lines()
+    Lib.read_lines()
     |> Enum.map(&parse_report/1)
     |> Enum.count(&safe?/1)
     |> IO.inspect(charlists: :as_lists, limit: :infinity)
