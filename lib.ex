@@ -9,4 +9,8 @@ defmodule Lib do
   def string_to_tuple(string) do
     String.split(string, "", trim: true) |> List.to_tuple
   end
+
+  def parse_int(string) do
+    Integer.parse(string) |> elem(0)
+  end
 end
