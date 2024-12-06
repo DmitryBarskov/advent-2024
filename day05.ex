@@ -7,7 +7,8 @@ defmodule Day05 do
 
     updates
     |> Enum.map(&parse_update/1)
-    |> Enum.filter(fn update -> follows_rules?(update, should_go_after) end)
+    |> Enum.filter(fn update -> not follows_rules?(update, should_go_after) end)
+    |> Enum.map(&topo_sort(should_go_after, &1))
     |> Enum.map(&middle_element/1)
     |> Enum.sum()
     |> IO.inspect(charlists: :as_lists)
@@ -45,4 +46,40 @@ defmodule Day05 do
   def middle_element([_], [middle | _]), do: middle
   def middle_element([], [middle | _]), do: middle
   def middle_element([_, _ | fast], [_ | slow]), do: middle_element(fast, slow)
+
+  def topo_sort(graph, list) do
+    # Convert the list into a set for quick membership checks
+    list_set = MapSet.new(list)
+
+    # Filter the graph to only include nodes and dependencies from the list
+    relevant_graph = 
+      Enum.reduce(graph, %{}, fn {node, neighbors}, acc ->
+        if MapSet.member?(list_set, node) do
+          Map.put(acc, node, Enum.filter(neighbors, &MapSet.member?(list_set, &1)))
+        else
+          acc
+        end
+      end)
+
+    # Perform topological sort with filtered graph
+    {sorted, _visited} =
+      Enum.reduce(list, {[], MapSet.new()}, fn node, {acc, visited} ->
+        dfs(node, relevant_graph, acc, visited, list_set)
+      end)
+
+    sorted
+  end
+
+  defp dfs(node, graph, sorted, visited, list_set) do
+    if MapSet.member?(visited, node) do
+      {sorted, visited}
+    else
+      {new_sorted, new_visited} =
+        Enum.reduce(Map.get(graph, node, []), {sorted, MapSet.put(visited, node)}, fn neighbor, {acc, vis} ->
+          dfs(neighbor, graph, acc, vis, list_set)
+        end)
+
+      {[node | new_sorted], new_visited}
+    end
+  end
 end
