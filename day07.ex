@@ -19,5 +19,9 @@ defmodule Day07 do
   def can_be_true_iter(result, [next_term | rest], total) do
     can_be_true_iter(result, rest, total + next_term) or \
       can_be_true_iter(result, rest, total * next_term)
+      can_be_true_iter(result, rest, concat(total, next_term))
   end
+
+  def concat(a, b), do: a * (10 ** number_of_digits(b)) + b
+  def number_of_digits(num), do: Integer.digits(num) |> length
 end
