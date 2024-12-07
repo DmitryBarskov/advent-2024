@@ -23,17 +23,11 @@ def trace(map, start)
     visited[position].add(direction)
 
     cell_in_front = move(position, direction)
-    next_direction =
-      if map.dig(*cell_in_front) == "#"
-        rotate(direction)
-      else
-        direction
-      end
-
-    next_position = move(position, next_direction)
-    visited[position].add(next_direction)
-
-    position, direction = [next_position, next_direction]
+    if map.dig(*cell_in_front) == "#"
+      direction = rotate(direction)
+    else
+      position = move(position, direction)
+    end
   end
 end
 
@@ -61,10 +55,19 @@ def main
   map = ARGF.readlines.map(&:chomp).map(&:chars)
 
   start = find_position(map, "^")
-  p start
 
+  p start
   _result, path = trace(map, start)
   p path.size
+
+  loops = path.delete(start).count do |position|
+    y, x = position
+    map[y][x] = "#"
+    result, = trace(map, start)
+    map[y][x] = "."
+    result == :loop
+  end
+  p loops
 end
 
 main
