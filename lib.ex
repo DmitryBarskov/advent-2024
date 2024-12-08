@@ -6,9 +6,9 @@ defmodule Lib do
     end
   end
 
-  def string_to_tuple(string) do
-    String.split(string, "", trim: true) |> List.to_tuple
-  end
+  def string_to_tuple(string), do: string_to_list(string) |> List.to_tuple
+
+  def string_to_list(string), do: String.split(string, "", trim: true)
 
   def parse_int(string) do
     Integer.parse(string) |> elem(0)
