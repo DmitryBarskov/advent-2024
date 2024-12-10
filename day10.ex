@@ -13,7 +13,7 @@ defmodule Day10 do
       fn i ->
         Enum.map(
           0..(tuple_size(map |> elem(i)) - 1),
-          fn j -> trail_head_to_end(map, i, j) |> MapSet.size end
+          fn j -> trail_head_to_end(map, i, j) end
         )
         |> Enum.sum
       end
@@ -24,16 +24,16 @@ defmodule Day10 do
   defguard in_range(map, i, j) when in_range(map, i) and 0 <= j and j < tuple_size(map |> elem(i))
 
   def trail_head_to_end(map, i, j, next_height \\ 0)
-  def trail_head_to_end(map, i, j, 9) when in_range(map, i, j) and map |> elem(i) |> elem(j) == "9", do: MapSet.new([{i, j}])
-  def trail_head_to_end(_, _, _, 9), do: MapSet.new()
-  def trail_head_to_end(map, i, j, _) when not in_range(map, i, j), do: MapSet.new()
+  def trail_head_to_end(map, i, j, 9) when in_range(map, i, j) and map |> elem(i) |> elem(j) == "9", do: 1
+  def trail_head_to_end(_, _, _, 9), do: 0
+  def trail_head_to_end(map, i, j, _) when not in_range(map, i, j), do: 0
   def trail_head_to_end(map, i, j, next_height) do
     cond do
       map |> elem(i) |> elem(j) == Integer.to_string(next_height) ->
         adjacent(i, j)
         |> Enum.map(fn {y, x} -> trail_head_to_end(map, y, x, next_height + 1) end)
-        |> Enum.reduce(MapSet.new(), fn set, all -> MapSet.union(all, set) end)
-      true -> MapSet.new()
+        |> Enum.sum
+      true -> 0
     end
   end
 
